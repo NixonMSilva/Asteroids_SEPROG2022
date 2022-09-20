@@ -104,6 +104,9 @@ public class GameManager : MonoBehaviour
         _score = 0;
         UpdateScoreUI();
 
+        // Reset game time
+        _gameTime = 0f;
+
         _uiGameover.SetActive(false);
         _uiGame.SetActive(true);
         _uiStartgame.SetActive(false);
