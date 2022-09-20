@@ -10,6 +10,11 @@ public class ShipMove : MonoBehaviour
     [SerializeField] private float _thrustPower = 2f;
     [SerializeField] private float _angleStep = 90f;
 
+    [SerializeField] private Transform _boundaryLeft;
+    [SerializeField] private Transform _boundaryRight;
+    [SerializeField] private Transform _boundaryTop;
+    [SerializeField] private Transform _boundaryBottom;
+
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidBody;
 
@@ -36,6 +41,8 @@ public class ShipMove : MonoBehaviour
 
         ValidateInput();
 
+        CheckTeleport();
+
         UpdateSprite();
     }
 
@@ -57,6 +64,51 @@ public class ShipMove : MonoBehaviour
         {
             RotateShip();
         }
+    }
+
+    private void CheckTeleport ()
+    {
+        
+
+        if (transform.position.x < _boundaryLeft.position.x)
+        {
+            Teleport(_boundaryRight, true);
+            return;
+        }
+        
+        if (transform.position.x > _boundaryRight.position.x)
+        {
+            Teleport(_boundaryLeft, true);
+            return;
+        }
+
+        if (transform.position.y > _boundaryTop.position.y)
+        {
+            Teleport(_boundaryBottom, false);
+            return;
+        }
+
+        if (transform.position.y < _boundaryBottom.position.y)
+        {
+            Teleport(_boundaryTop, false);
+            return;
+        }
+    }
+
+    private void Teleport (Transform destination, bool isX)
+    {
+        _rigidBody.isKinematic = true;
+
+        if (isX)
+        {
+            transform.position = new Vector3(destination.position.x, transform.position.y, transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x, destination.position.y, transform.position.z);
+        }
+
+        _rigidBody.isKinematic = false;
     }
 
     private void UpdateSprite ()
